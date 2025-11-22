@@ -1,0 +1,13 @@
+# Validation Report
+- OK: `u_casuales` y `u_registrados` no están en X
+- Se encontraron 5 modelo(s):
+  - model_rf_tuned.joblib
+    - métricas: {'rmse': 81.22309595799892, 'mae': 53.18394418872268}
+  - model_lgbm.joblib
+    - métricas: {'rmse': 60.10789498468961, 'mae': 38.81876634235362}
+  - model_rf.joblib
+    - métricas: {'rmse': 69.80952361368153, 'mae': 45.132333141542}
+  - model_baseline.joblib
+    - métricas: {'rmse': 71.1820756960821, 'mae': 45.93443037974684}
+  - model_lgbm_tuned.joblib
+    - métricas: {'rmse': 67.77046830505306, 'mae': 45.31756539800965}
