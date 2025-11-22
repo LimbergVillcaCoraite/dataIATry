@@ -1,0 +1,11 @@
+{
+  "rmse": 8.082869300315943,
+  "mae": 2.706362134499102,
+  "best_params": {
+    "subsample": 1.0,
+    "num_leaves": 70,
+    "n_estimators": 800,
+    "max_depth": 6,
+    "learning_rate": 0.1
+  }
+}
