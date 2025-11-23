@@ -1,1 +1,11 @@
-models/model_rf_tuned.joblib
+# Ignore large model artifacts
+models/*.joblib
+models/*.pb
+# Keep metrics and small artifacts
+!models/*.metrics.json
+
+# Python artifacts
+__pycache__/
+*.pyc
+.venv/
+
