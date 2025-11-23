@@ -134,3 +134,30 @@ Si quieres, puedo:
 
 Fin del README.
 
+---
+
+## Uso rápido de los nuevos scripts
+
+He añadido dos scripts útiles que ejecuté en esta rama:
+
+- `scripts/train_xgb_full.py`: reentrena XGBoost sobre todo el dataset usando los mejores hiperparámetros guardados por el HPO (`models/model_xgb_hpo.metrics.json`) si existen. Guarda el modelo en `models/model_xgb_final.joblib` y las métricas en `models/model_xgb_final.metrics.json`.
+
+- `scripts/plot_comparison.py`: genera una figura comparativa de `RMSE` y `MAE` a partir de `reports/comparison_table.csv` y guarda la imagen en `reports/figs/comparison_rmse_mae.png`.
+
+Comandos de ejemplo (desde la raíz del repo, con entorno activado):
+
+```bash
+# Ejecutar tests
+PYTHONPATH=. ./.venv/bin/pytest -q
+
+# Reentrenar XGBoost final
+PYTHONPATH=. ./.venv/bin/python scripts/train_xgb_full.py
+
+# Generar gráfica comparativa
+./.venv/bin/python scripts/plot_comparison.py
+```
+
+La API por defecto ahora intenta cargar `model_catboost_final` si está disponible (esto facilita usar el modelo reentrenado final para inferencias). Si deseas que la API use otro modelo por defecto, edita `api/app.py`.
+
+Si quieres, puedo crear un `Dockerfile` que incluya estos pasos para reproducir el entrenamiento y la API de forma aislada.
+

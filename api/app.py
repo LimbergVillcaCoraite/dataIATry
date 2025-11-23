@@ -16,7 +16,7 @@ app = FastAPI(title='Alquiler Monopatines - API')
 class PredictRequest(BaseModel):
     # aceptar un diccionario de características; las llaves deben coincidir con raw input (fecha, hora, etc.)
     data: dict
-    model: Optional[str] = 'model_catboost_hpo'
+    model: Optional[str] = 'model_catboost_final'
 
 
 def _discover_models(models_dir: Path) -> dict:
