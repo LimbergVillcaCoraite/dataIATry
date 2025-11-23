@@ -1,0 +1,117 @@
+{
+  "model": "/workspaces/dataIATry/models/model_catboost_hpo.joblib",
+  "top_features": [
+    {
+      "feature": "hora_cos",
+      "mean_abs_shap": 43.85324920449129
+    },
+    {
+      "feature": "hora",
+      "mean_abs_shap": 41.98972668379214
+    },
+    {
+      "feature": "hora_sin",
+      "mean_abs_shap": 35.13831532292844
+    },
+    {
+      "feature": "temperatura",
+      "mean_abs_shap": 18.76387783268542
+    },
+    {
+      "feature": "rolling_mean_24",
+      "mean_abs_shap": 17.427779625794756
+    },
+    {
+      "feature": "lag_1",
+      "mean_abs_shap": 16.44194313305704
+    },
+    {
+      "feature": "rolling_mean_168",
+      "mean_abs_shap": 14.60454001465608
+    },
+    {
+      "feature": "indice",
+      "mean_abs_shap": 12.190920681675474
+    },
+    {
+      "feature": "dayofweek",
+      "mean_abs_shap": 9.819946670591527
+    },
+    {
+      "feature": "humedad",
+      "mean_abs_shap": 9.449845283422256
+    },
+    {
+      "feature": "dia_trabajo",
+      "mean_abs_shap": 9.09397978762347
+    },
+    {
+      "feature": "clima",
+      "mean_abs_shap": 5.47505942455429
+    },
+    {
+      "feature": "sensacion_termica",
+      "mean_abs_shap": 4.057506271354886
+    },
+    {
+      "feature": "rolling_mean_6",
+      "mean_abs_shap": 2.8083286263112646
+    },
+    {
+      "feature": "year",
+      "mean_abs_shap": 2.755314296527906
+    },
+    {
+      "feature": "lag_168",
+      "mean_abs_shap": 2.197057700005446
+    },
+    {
+      "feature": "is_weekend",
+      "mean_abs_shap": 2.1276453879219743
+    },
+    {
+      "feature": "velocidad_viento",
+      "mean_abs_shap": 1.702692108933438
+    },
+    {
+      "feature": "rolling_mean_3",
+      "mean_abs_shap": 1.5665139204885083
+    },
+    {
+      "feature": "temporada",
+      "mean_abs_shap": 1.2550508577093809
+    },
+    {
+      "feature": "lag_24",
+      "mean_abs_shap": 1.0260891345690029
+    },
+    {
+      "feature": "dia_semana",
+      "mean_abs_shap": 0.9133149534476689
+    },
+    {
+      "feature": "lag_48",
+      "mean_abs_shap": 0.8265532502571001
+    },
+    {
+      "feature": "mes",
+      "mean_abs_shap": 0.7091111640522467
+    },
+    {
+      "feature": "month",
+      "mean_abs_shap": 0.6638772494748902
+    },
+    {
+      "feature": "day",
+      "mean_abs_shap": 0.38558209246544384
+    },
+    {
+      "feature": "feriado",
+      "mean_abs_shap": 0.27493106329088624
+    },
+    {
+      "feature": "anio",
+      "mean_abs_shap": 0.22203863405917043
+    }
+  ]
+}

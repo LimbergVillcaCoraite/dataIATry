@@ -1,0 +1,36 @@
+{
+  "dropped_columns": [
+    "anio",
+    "mes",
+    "sensacion_termica"
+  ],
+  "metrics": {
+    "model_stacked.metrics": {
+      "rmse": 62.79986932303158,
+      "mae": 42.270280371421265
+    },
+    "model_rf_tuned.metrics": {
+      "rmse": 79.72107445786068,
+      "mae": 52.34304948216341
+    },
+    "model_catboost_hpo.metrics": {
+      "rmse": 59.250592613933705,
+      "best_params": {
+        "learning_rate": 0.1,
+        "l2_leaf_reg": 9,
+        "iterations": 400,
+        "depth": 6
+      },
+      "cat_features": [
+        "temporada",
+        "feriado",
+        "dia_semana",
+        "clima"
+      ]
+    },
+    "model_lgbm_tuned.metrics": {
+      "rmse": 66.23932586212881,
+      "mae": 44.00357309230091
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "rmse": 60.82349237038687,
+  "mae": 40.09406827980682,
+  "best_params": {
+    "boosting_type": "gbdt",
+    "num_leaves": 108,
+    "learning_rate": 0.025726369214547976,
+    "n_estimators": 400,
+    "max_depth": 7,
+    "min_child_samples": 5,
+    "subsample": 0.7953883434354847,
+    "feature_fraction": 0.6279912386716338,
+    "lambda_l1": 3.4108247733017425,
+    "lambda_l2": 0.8982532855526038
+  }
+}

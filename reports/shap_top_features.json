@@ -1,0 +1,73 @@
+{
+  "model": "/workspaces/dataIATry/models/model_lgbm_tuned.joblib",
+  "top_features": [
+    {
+      "feature": "hora",
+      "mean_abs_shap": 55.19389801993001
+    },
+    {
+      "feature": "hora_cos",
+      "mean_abs_shap": 29.374528799548422
+    },
+    {
+      "feature": "lag_1",
+      "mean_abs_shap": 27.06738926239165
+    },
+    {
+      "feature": "hora_sin",
+      "mean_abs_shap": 26.298596489364442
+    },
+    {
+      "feature": "temperatura",
+      "mean_abs_shap": 21.821873120148553
+    },
+    {
+      "feature": "year",
+      "mean_abs_shap": 20.34344377873908
+    },
+    {
+      "feature": "rolling_mean_24",
+      "mean_abs_shap": 18.74838791764303
+    },
+    {
+      "feature": "dia_trabajo",
+      "mean_abs_shap": 11.76733452743044
+    },
+    {
+      "feature": "humedad",
+      "mean_abs_shap": 10.248520827496694
+    },
+    {
+      "feature": "dayofweek",
+      "mean_abs_shap": 8.091744162935962
+    },
+    {
+      "feature": "clima_cat",
+      "mean_abs_shap": 6.337509483950785
+    },
+    {
+      "feature": "month",
+      "mean_abs_shap": 5.264614010200668
+    },
+    {
+      "feature": "temporada_cat",
+      "mean_abs_shap": 3.7574678406635806
+    },
+    {
+      "feature": "velocidad_viento",
+      "mean_abs_shap": 2.576684664708879
+    },
+    {
+      "feature": "lag_24",
+      "mean_abs_shap": 1.9855953954350662
+    },
+    {
+      "feature": "day",
+      "mean_abs_shap": 1.8035969960277136
+    },
+    {
+      "feature": "is_weekend",
+      "mean_abs_shap": 0.0
+    }
+  ]
+}

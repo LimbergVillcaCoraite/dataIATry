@@ -1,0 +1,39 @@
+{
+  "n_rows": 17379,
+  "n_features_before": 26,
+  "n_high_corr_pairs": 5,
+  "high_corr_pairs": [
+    {
+      "a": "anio",
+      "b": "year",
+      "corr": 1.0
+    },
+    {
+      "a": "mes",
+      "b": "month",
+      "corr": 1.0
+    },
+    {
+      "a": "dia_trabajo",
+      "b": "is_weekend",
+      "corr": 0.9341047808553753
+    },
+    {
+      "a": "temperatura",
+      "b": "sensacion_termica",
+      "corr": 0.9255568258035657
+    },
+    {
+      "a": "rolling_mean_24",
+      "b": "rolling_mean_168",
+      "corr": 0.9001908837081415
+    }
+  ],
+  "suggested_drops": [
+    "is_weekend",
+    "anio",
+    "rolling_mean_168",
+    "mes",
+    "sensacion_termica"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "rmse_cv": 60.21789634649461,
+  "mae_cv": 40.578071456317005,
+  "cat_features": [
+    "temporada",
+    "feriado",
+    "dia_semana",
+    "clima"
+  ],
+  "params": {
+    "iterations": 400,
+    "depth": 6,
+    "learning_rate": 0.1,
+    "l2_leaf_reg": 9
+  }
+}

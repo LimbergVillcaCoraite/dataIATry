@@ -1,0 +1,15 @@
+{
+  "rmse": 59.250592613933705,
+  "best_params": {
+    "learning_rate": 0.1,
+    "l2_leaf_reg": 9,
+    "iterations": 400,
+    "depth": 6
+  },
+  "cat_features": [
+    "temporada",
+    "feriado",
+    "dia_semana",
+    "clima"
+  ]
+}

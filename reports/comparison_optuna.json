@@ -1,0 +1,17 @@
+{
+  "model_lgbm_optuna": {
+    "rmse": 60.82349237038687,
+    "mae": 40.09406827980682,
+    "path": "/workspaces/dataIATry/models/model_lgbm_optuna.joblib"
+  },
+  "model_catboost_hpo": {
+    "rmse": 60.09561405303299,
+    "mae": 40.706120135909806,
+    "path": "/workspaces/dataIATry/models/model_catboost_hpo.joblib"
+  },
+  "model_stacked": {
+    "rmse": 60.876462311072466,
+    "mae": 40.47961648593498,
+    "path": "/workspaces/dataIATry/models/model_stacked.joblib"
+  }
+}

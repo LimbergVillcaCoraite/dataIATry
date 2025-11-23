@@ -1,0 +1,5 @@
+{
+  "n_rows": 17379,
+  "n_features": 26,
+  "model_used": "/workspaces/dataIATry/models/model_catboost_hpo.joblib"
+}

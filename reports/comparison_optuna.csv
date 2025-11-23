@@ -1,0 +1,4 @@
+,rmse,mae,path
+model_lgbm_optuna,60.82349237038687,40.09406827980682,/workspaces/dataIATry/models/model_lgbm_optuna.joblib
+model_catboost_hpo,60.09561405303299,40.706120135909806,/workspaces/dataIATry/models/model_catboost_hpo.joblib
+model_stacked,60.876462311072466,40.47961648593498,/workspaces/dataIATry/models/model_stacked.joblib
