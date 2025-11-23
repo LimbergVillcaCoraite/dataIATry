@@ -161,3 +161,38 @@ La API por defecto ahora intenta cargar `model_catboost_final` si está disponib
 
 Si quieres, puedo crear un `Dockerfile` que incluya estos pasos para reproducir el entrenamiento y la API de forma aislada.
 
+## Docker y ejecución con Make
+
+Incluí un `Dockerfile`, `docker-compose.yml` y un `Makefile` para facilitar reproducibilidad.
+
+Construir la imagen (local):
+
+```bash
+make build
+```
+
+Levantar la API (docker-compose):
+
+```bash
+make up
+```
+
+Ejecutar tests dentro del entorno local (usa el Python del `.venv` si existe):
+
+```bash
+make test
+```
+
+Reentrenar XGBoost desde la CLI:
+
+```bash
+make train-xgb
+```
+
+Generar la gráfica comparativa:
+
+```bash
+make plot
+```
+
+

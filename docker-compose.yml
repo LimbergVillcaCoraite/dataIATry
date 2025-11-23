@@ -2,6 +2,23 @@ version: '3.8'
 services:
   api:
     build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: uvicorn api.app:app --host 0.0.0.0 --port 8000
+
+  worker:
+    build: .
+    volumes:
+      - ./:/app
+    command: bash -lc "PYTHONPATH=. python scripts/train_xgb_full.py"
+version: '3.8'
+services:
+  api:
+    build: .
     volumes:
       - ./:/app:cached
     ports:

@@ -1,3 +1,31 @@
+PY?= ./.venv/bin/python
+PIP?= ./.venv/bin/pip
+
+.PHONY: help build up down test train-xgb plot docs
+
+help:
+	@echo "Targets: build up down test train-xgb plot"
+
+build:
+	docker build -t dataiatry:latest .
+
+up:
+	docker-compose up --build
+
+down:
+	docker-compose down
+
+test:
+	PYTHONPATH=. $(PY?) -m pytest -q
+
+train-xgb:
+	PYTHONPATH=. $(PY?) scripts/train_xgb_full.py
+
+plot:
+	$(PY?) scripts/plot_comparison.py
+
+docs:
+	@echo "See README.md for usage"
 PY=.venv/bin/python
 
 .PHONY: build docker-build run hpo test validate clean
