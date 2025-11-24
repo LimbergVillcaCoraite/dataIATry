@@ -21,7 +21,7 @@ jobs:
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
           RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
-          IMAGE: ghcr.io/${{ toLower(github.repository_owner) }}/dataiatry:latest
+            IMAGE: ghcr.io/limbergvillcacoraite/dataiatry:latest
         run: |
           echo "Triggering deploy on Render for service $RENDER_SERVICE_ID with image $IMAGE"
           if [ -z "$RENDER_API_KEY" ] || [ -z "$RENDER_SERVICE_ID" ]; then
