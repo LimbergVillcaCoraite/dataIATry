@@ -5,44 +5,24 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# system deps for common packages
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
-# copy only requirements first (cache)
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
-
-# copy project
-COPY . /app
-
-ENV PATH="/app/.venv/bin:$PATH"
-
-EXPOSE 8000
-
-CMD ["uvicorn", "api.app:app", "--host", "0.0.0.0", "--port", "8000"]
-FROM python:3.12-slim AS base
-
-WORKDIR /app
-
-# Install build deps, install python packages, then remove build deps to keep image small
+# Install minimal system deps required for building wheels
 RUN apt-get update \
- && apt-get install -y --no-install-recommends build-essential curl \
- && rm -rf /var/lib/apt/lists/*
+     && apt-get install -y --no-install-recommends \
+         build-essential curl \
+     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt ./
+# Copy and install Python dependencies
+COPY requirements.txt /app/
 RUN python -m pip install --upgrade pip \
- && pip install --no-cache-dir -r requirements.txt
+    && pip install --no-cache-dir -r requirements.txt
+    && pip install --no-cache-dir xgboost lightgbm catboost
 
-# Copy sources
+# Copy project
 COPY . /app
 
-# Remove build deps to reduce final image size
-RUN apt-get purge -y --auto-remove build-essential \
- && rm -rf /var/lib/apt/lists/* /root/.cache/pip
+# Ensure project package imports work
+ENV PYTHONPATH=/app
 
-ENV PYTHONUNBUFFERED=1
 EXPOSE 8000
 
 CMD ["uvicorn", "api.app:app", "--host", "0.0.0.0", "--port", "8000"]
