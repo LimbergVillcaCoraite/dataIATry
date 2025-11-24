@@ -8,8 +8,9 @@ import warnings
 import joblib
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor, GradientBoostingRegressor, HistGradientBoostingRegressor
-from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor, GradientBoostingRegressor, HistGradientBoostingRegressor, AdaBoostRegressor
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.linear_model import LinearRegression, Ridge
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.model_selection import TimeSeriesSplit
 
@@ -71,10 +72,13 @@ def main():
     models = {}
 
     models["linear"] = LinearRegression()
+    models["ridge"] = Ridge(random_state=42)
     models["rf"] = RandomForestRegressor(n_estimators=200, random_state=42, n_jobs=-1)
     models["et"] = ExtraTreesRegressor(n_estimators=200, random_state=42, n_jobs=-1)
     models["gbr"] = GradientBoostingRegressor(n_estimators=200, random_state=42)
     models["hgb"] = HistGradientBoostingRegressor(max_iter=200, random_state=42)
+    models["knn"] = KNeighborsRegressor(n_neighbors=5)
+    models["ada"] = AdaBoostRegressor(n_estimators=100, random_state=42)
 
     # optional external models with hpo params
     xgb_params = load_hpo_params(root / "models" / "model_xgb_hpo.metrics.json")
