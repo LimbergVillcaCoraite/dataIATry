@@ -7,14 +7,14 @@ WORKDIR /app
 
 # Install minimal system deps required for building wheels
 RUN apt-get update \
-     && apt-get install -y --no-install-recommends \
-         build-essential curl \
-     && rm -rf /var/lib/apt/lists/*
+    && apt-get install -y --no-install-recommends \
+        build-essential curl \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy and install Python dependencies
 COPY requirements.txt /app/
 RUN python -m pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+    && pip install --no-cache-dir -r requirements.txt \
     && pip install --no-cache-dir xgboost lightgbm catboost
 
 # Copy project
