@@ -5,7 +5,10 @@ import joblib
 from pathlib import Path
 import pandas as pd
 import json
-import lightgbm as lgb
+try:
+    import lightgbm as lgb
+except Exception:
+    lgb = None
 import importlib
 
 from src.preprocessing import build_features, create_lag_features, encode_categoricals, get_feature_columns_example
@@ -71,8 +74,8 @@ def predict(req: PredictRequest):
     df = encode_categoricals(df)
 
     # Alinear columnas con las que el modelo espera. get_feature_columns_example
-    # construye las columnas numéricas esperadas por el pipeline.
-    expected_cols = get_feature_columns_example(df)
+    # devuelve la lista de columnas esperadas (sin argumentos).
+    expected_cols = get_feature_columns_example()
     X = df.select_dtypes(include=['number']).copy()
     # garantizar que el orden y columnas coincidan con lo esperado por el modelo
     X = X.reindex(columns=expected_cols, fill_value=0).fillna(0)
@@ -85,10 +88,13 @@ def predict(req: PredictRequest):
         try:
             model = joblib.load(model_path)
         except Exception:
-            try:
-                model = lgb.Booster(model_file=str(model_path))
-            except Exception as e:
-                raise HTTPException(status_code=500, detail=f"No se pudo cargar el modelo: {e}")
+            if lgb is not None:
+                try:
+                    model = lgb.Booster(model_file=str(model_path))
+                except Exception as e:
+                    raise HTTPException(status_code=500, detail=f"No se pudo cargar el modelo: {e}")
+            else:
+                raise HTTPException(status_code=500, detail="No se pudo cargar el modelo: lightgbm no está instalado en el contenedor")
         app.state.model_cache[req.model] = model
 
     try:
@@ -105,7 +111,7 @@ def predict(req: PredictRequest):
             pass
 
         # manejar LightGBM Booster (usa predict con numpy)
-        if isinstance(model, lgb.Booster):
+        if lgb is not None and isinstance(model, getattr(lgb, 'Booster', object)):
             preds = model.predict(X.values)
         else:
             preds = model.predict(X)
