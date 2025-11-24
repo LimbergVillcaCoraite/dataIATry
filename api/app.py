@@ -12,6 +12,7 @@ except Exception:
 import importlib
 
 from src.preprocessing import build_features, create_lag_features, encode_categoricals, get_feature_columns_example
+import logging
 
 app = FastAPI(title='Alquiler Monopatines - API')
 
@@ -73,9 +74,18 @@ def predict(req: PredictRequest):
     # codificar categorías con códigos (consistent con prepare_X_y)
     df = encode_categoricals(df)
 
-    # Alinear columnas con las que el modelo espera. get_feature_columns_example
-    # devuelve la lista de columnas esperadas (sin argumentos).
-    expected_cols = get_feature_columns_example()
+    # Alinear columnas con las que el modelo espera. Intentamos llamar a
+    # `get_feature_columns_example` de forma robusta: primero sin argumentos
+    # (la firma esperada), y si eso falla intentar pasar el dataframe
+    # para compatibilidad con versiones anteriores.
+    try:
+        expected_cols = get_feature_columns_example()
+    except TypeError:
+        try:
+            expected_cols = get_feature_columns_example(df)
+        except Exception as e:
+            logging.exception("No se pudo obtener columnas esperadas con get_feature_columns_example")
+            raise HTTPException(status_code=500, detail=f"get_feature_columns_example fallo: {e}")
     X = df.select_dtypes(include=['number']).copy()
     # garantizar que el orden y columnas coincidan con lo esperado por el modelo
     X = X.reindex(columns=expected_cols, fill_value=0).fillna(0)
