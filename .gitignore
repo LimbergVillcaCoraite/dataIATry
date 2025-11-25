@@ -5,7 +5,6 @@ __pycache__/
 *.pyc
 *.pkl
 *.joblib
-reports/
 models/
 .DS_Store
 /.idea/
