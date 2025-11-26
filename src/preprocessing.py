@@ -1,157 +1,116 @@
-"""Preprocesamiento modular y reproducible.
+"""Preprocesamiento y generación de features para el proyecto.
 
-Este módulo encapsula transformaciones reproducibles que se deben aplicar tanto
-en entrenamiento como en producción (API). La idea es mantener funciones pequeñas
-y documentadas que puedan combinarse en un pipeline.
+Funciones principales:
+- build_features(df): añade variables de tiempo y limpiezas básicas.
+- create_lag_features(df, col, lags): crea rezagos temporales del target.
+- encode_categoricals(df): encodeo sencillo para categoricals.
+- prepare_X_y(df, target, drop_cols): prepara X e y listos para el modelo.
+- get_feature_columns_example(): devuelve lista de columnas esperadas (útil para la API).
+
+Este módulo está escrito para ser compacto y robusto: evita dependencias
+pesadas y maneja NA/inf apropiadamente.
 """
-from typing import Tuple
-import pandas as pd
-import numpy as np
+from __future__ import annotations
 
-from src.data import basic_clean
+from typing import List, Tuple
+
+import numpy as np
+import pandas as pd
 
 
 def build_features(df: pd.DataFrame) -> pd.DataFrame:
-    """Aplica feature engineering simple y reproducible.
-
-    - Extrae componentes temporales de `fecha` si existe.
-    - Asegura que `hora` sea entera.
-    - Crea variables cíclicas si es útil (hora -> sin/cos) para capturar periodicidad.
-    """
     df = df.copy()
+    # Asegurar que fecha existe y es datetime
+    if "fecha" in df.columns:
+        df["fecha"] = pd.to_datetime(df["fecha"], errors="coerce")
+    else:
+        raise KeyError("Se requiere la columna 'fecha' en el dataframe")
 
-    # Aplicar limpieza básica primero
-    df = basic_clean(df)
+    # Variables temporales
+    df["hour"] = df["fecha"].dt.hour
+    df["dayofweek"] = df["fecha"].dt.dayofweek
+    df["month"] = df["fecha"].dt.month
+    df["is_weekend"] = df["dayofweek"].isin([5, 6]).astype(int)
 
-    # Extraer componentes temporales solo si `fecha` se convirtió correctamente
-    if 'fecha' in df.columns and pd.api.types.is_datetime64_any_dtype(df['fecha']):
-        df['year'] = df['fecha'].dt.year
-        df['month'] = df['fecha'].dt.month
-        df['day'] = df['fecha'].dt.day
-        df['dayofweek'] = df['fecha'].dt.dayofweek
-        df['is_weekend'] = df['dayofweek'].isin([5,6]).astype(int)
-
-    # Hora: asegurar entero y generar representación cíclica
-    if 'hora' in df.columns:
-        df['hora'] = df['hora'].astype('Int64')
-        # Representación cíclica: sin/cos para hora (0-23)
-        try:
-            hour = df['hora'].fillna(0).astype(int)
-            df['hora_sin'] = np.sin(2 * np.pi * hour / 24)
-            df['hora_cos'] = np.cos(2 * np.pi * hour / 24)
-        except Exception:
-            # En caso de fallo, dejar sin/cos con NaN
-            df['hora_sin'] = np.nan
-            df['hora_cos'] = np.nan
-
-    # Podríamos codificar `clima` como categórica ordinal si es numérico
-    if 'clima' in df.columns:
-        # convertir a tipo categórico para reducir memoria y permitir códigos ordinales
-        try:
-            df['clima'] = df['clima'].astype('category')
-        except Exception:
-            pass
-
-    # Convertir columnas de baja cardinalidad a 'category' para optimizar memoria
-    for col in ['temporada', 'feriado', 'dia_semana']:
-        if col in df.columns:
-            try:
-                df[col] = df[col].astype('category')
-            except Exception:
-                continue
+    # Orden por fecha
+    df = df.sort_values("fecha").reset_index(drop=True)
 
     return df
 
 
-def create_lag_features(df: pd.DataFrame, lags: list = [1, 24], rolling_windows: list = [24]) -> pd.DataFrame:
-    """Crea features de series temporales (lags y medias móviles).
-
-    - `lags`: lista de enteros que representan desplazamientos en horas (ej. 1, 24).
-    - `rolling_windows`: ventanas para medias móviles (en horas).
-
-    Motivo: lag features aportan información de dependencia temporal inmediata y estacional.
-    """
+def create_lag_features(df: pd.DataFrame, col: str, lags: List[int]) -> pd.DataFrame:
     df = df.copy()
-    # Necesitamos un índice temporal
-    if 'fecha' not in df.columns or not pd.api.types.is_datetime64_any_dtype(df['fecha']):
-        # intentar convertir
-        df['fecha'] = pd.to_datetime(df.get('fecha', None), errors='coerce')
-
-    # ordenar por fecha para que los lags sean consistentes
-    if 'fecha' in df.columns:
-        df = df.sort_values('fecha').reset_index(drop=True)
-
-    if 'total_alquileres' in df.columns:
-        for lag in lags:
-            df[f'lag_{lag}'] = df['total_alquileres'].shift(lag)
-        for w in rolling_windows:
-            df[f'rolling_mean_{w}'] = df['total_alquileres'].shift(1).rolling(window=w, min_periods=1).mean()
-
+    for l in lags:
+        name = f"{col}_lag_{l}"
+        df[name] = df[col].shift(l)
     return df
 
 
-def encode_categoricals(df: pd.DataFrame, cat_cols: list = ['clima', 'temporada']) -> pd.DataFrame:
-    """Codifica variables categóricas con one-hot (limitando cardinalidad si es necesario).
-
-    - Guardamos prefijos claros para facilitar depuración y despliegue.
-    """
+def encode_categoricals(df: pd.DataFrame, cols: List[str] | None = None) -> pd.DataFrame:
     df = df.copy()
-    # Para mejorar rendimiento y evitar expansión excesiva de columnas usamos códigos
-    # ordinales para categorías (LightGBM maneja bien enteros). Esto mantiene la
-    # dimensionalidad baja y acelera tanto entrenamiento como predicción.
-    for col in cat_cols:
-        if col in df.columns:
-            try:
-                # convertir en categórico si no lo es
-                if not pd.api.types.is_categorical_dtype(df[col]):
-                    df[col] = df[col].astype('category')
-                # reemplazar por códigos (enteros) y renombrar la columna para claridad
-                df[f'{col}_cat'] = df[col].cat.codes
-                df = df.drop(columns=[col])
-            except Exception:
-                # si falla, dejar la columna tal cual
-                continue
+    if cols is None:
+        # detectar categorías simples (object o category)
+        cols = [c for c, t in df.dtypes.items() if t == "object"]
+    for c in cols:
+        # label encoding simple que mantiene orden y evita dependencias
+        df[c] = df[c].astype("category").cat.codes
     return df
 
 
-def prepare_X_y(df: pd.DataFrame, target: str = 'total_alquileres', exclude: list | None = None) -> Tuple[pd.DataFrame, pd.Series]:
-    """Construye la matriz de características X y el vector objetivo y.
-
-    - `exclude` permite quitar columnas no deseadas (p.ej. `u_casuales`, `u_registrados`).
-    - Se hace imputación numérica simple (mediana) para variables numéricas.
-    - Devuelve X (solo columnas numéricas por simplicidad) e y.
-    """
-    if exclude is None:
-        exclude = []
+def prepare_X_y(
+    df: pd.DataFrame,
+    target: str = "total_alquileres",
+    drop_cols: List[str] | None = None,
+    lags: List[int] | None = None,
+) -> Tuple[pd.DataFrame, pd.Series]:
     df = df.copy()
+    if drop_cols is None:
+        drop_cols = ["u_casuales", "u_registrados"]
 
-    # Asegurar que el objetivo existe
-    if target not in df.columns:
-        raise ValueError(f"Objetivo '{target}' no encontrado en el DataFrame")
+    # construir features temporales
+    df = build_features(df)
 
-    y = df[target]
+    # añadir rezagos del target si se pide
+    if lags is None:
+        lags = [1, 24, 168]
+    if target in df.columns:
+        df = create_lag_features(df, target, lags)
 
-    # Excluir columnas irrelevantes
-    to_drop = [target] + exclude
-    X = df.drop(columns=[c for c in to_drop if c in df.columns])
+    # eliminar columnas que no deben ser usadas
+    for c in drop_cols:
+        if c in df.columns:
+            df = df.drop(columns=[c])
 
-    # Codificar categóricas antes de seleccionar numéricas
+    # Valores infinitos a NaN
+    df = df.replace([np.inf, -np.inf], np.nan)
+
+    # seleccionar columnas candidatas para X
+    # excluir fecha y target
+    exclude = {"fecha", target}
+    feature_cols = [c for c in df.columns if c not in exclude]
+
+    X = df[feature_cols].copy()
+    # encode simples
     X = encode_categoricals(X)
 
-    # Mantener solo columnas numéricas para un pipeline baseline
-    X_num = X.select_dtypes(include=[np.number]).copy()
+    # Alineamiento: quitar filas con NA en X o y
+    if target in df.columns:
+        y = df[target].copy()
+    else:
+        y = pd.Series([np.nan] * len(df), index=df.index)
 
-    # Imputación simple: mediana
-    X_num = X_num.fillna(X_num.median())
+    # concatenar para eliminar filas con NA en cualquiera
+    both = pd.concat([X, y.rename("__y")], axis=1)
+    both = both.dropna()
 
-    return X_num, y
+    X_clean = both.drop(columns=["__y"]).reset_index(drop=True)
+    y_clean = both["__y"].reset_index(drop=True)
+
+    return X_clean, y_clean
 
 
-def get_feature_columns_example(df: pd.DataFrame) -> list:
-    """Función auxiliar para devolver columnas que el modelo espera.
-
-    Útil para la API: tomar un DataFrame con una fila y alinear columnas.
-    """
-    df2 = build_features(df.head(1))
-    X_num, _ = prepare_X_y(df2, exclude=['u_casuales', 'u_registrados'])
-    return list(X_num.columns)
+def get_feature_columns_example() -> List[str]:
+    # lista mínima de columnas que el modelo espera (usada por la API para alinear)
+    base = ["hour", "dayofweek", "month", "is_weekend"]
+    lags = ["total_alquileres_lag_1", "total_alquileres_lag_24", "total_alquileres_lag_168"]
+    return base + lags
