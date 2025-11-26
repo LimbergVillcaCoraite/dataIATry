@@ -1,0 +1,5 @@
+
+# Ignore model artifacts
+models/*.joblib
+artifacts/*.joblib
+*.joblib
