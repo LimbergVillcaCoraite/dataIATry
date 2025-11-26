@@ -1,0 +1,6 @@
+{
+  "model": "model_catboost",
+  "rmse_in_sample": 30.152265751169192,
+  "mae_in_sample": 20.06713631376691,
+  "n_samples": 17177
+}

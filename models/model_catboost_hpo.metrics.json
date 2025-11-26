@@ -1,0 +1,11 @@
+{
+  "rmse": 59.39066651968253,
+  "mae": 39.68637708448397,
+  "best_params": {
+    "learning_rate": 0.05,
+    "l2_leaf_reg": 1,
+    "iterations": 400,
+    "depth": 8,
+    "border_count": 128
+  }
+}
