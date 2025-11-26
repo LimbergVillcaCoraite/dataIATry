@@ -34,6 +34,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ghcr.io/limbergvillcacoraite/dataiatry:latest
+          platforms: linux/amd64,linux/arm64
 
       - name: Image info
         run: echo "Image pushed to ghcr.io/limbergvillcacoraite/dataiatry:latest"
