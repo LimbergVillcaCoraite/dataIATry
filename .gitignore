@@ -3,3 +3,8 @@
 models/*.joblib
 artifacts/*.joblib
 *.joblib
+
+# Model artifacts
+models/*.joblib
+artifacts/*.joblib
+
