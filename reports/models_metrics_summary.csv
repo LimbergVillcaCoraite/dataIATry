@@ -1,0 +1,13 @@
+model,path,rmse_cv,mae_cv,rmse_in_sample
+model_ada_candidate,/workspaces/dataIATry/models/model_ada_candidate.joblib,117.77082688111258,99.84834410555672,
+model_catboost_candidate,/workspaces/dataIATry/models/model_catboost_candidate.joblib,64.4308841970001,44.15591301294656,
+model_catboost_final,/workspaces/dataIATry/models/model_catboost_final.joblib,,,30.152265751169192
+model_catboost_final_v1,/workspaces/dataIATry/models/model_catboost_final_v1.joblib,,,30.152265751169192
+model_gbr_candidate,/workspaces/dataIATry/models/model_gbr_candidate.joblib,100.79864470951244,79.9868689667273,
+model_hgb_candidate,/workspaces/dataIATry/models/model_hgb_candidate.joblib,65.37675399360658,44.51929667403732,
+model_knn_candidate,/workspaces/dataIATry/models/model_knn_candidate.joblib,168.52700637727358,135.79802935010485,
+model_lgbm_candidate,/workspaces/dataIATry/models/model_lgbm_candidate.joblib,65.8168488330586,45.10454737811313,
+model_linear_candidate,/workspaces/dataIATry/models/model_linear_candidate.joblib,137.58828138732056,103.34734075247161,
+model_ridge_candidate,/workspaces/dataIATry/models/model_ridge_candidate.joblib,137.43433507535286,103.20893712139949,
+model_xgb_candidate,/workspaces/dataIATry/models/model_xgb_candidate.joblib,73.41939854790375,51.25793482831134,
+model_xgb_final,/workspaces/dataIATry/models/model_xgb_final.joblib,missing,,
